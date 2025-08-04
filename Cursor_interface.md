@@ -860,3 +860,850 @@ Java provides multiple cursor interfaces, each designed for specific use cases:
 - **Spliterator**: Modern, parallel-processing capable, Stream integration
 
 Choose the appropriate cursor based on your specific requirements for traversal direction, modification needs, thread safety, and performance considerations.
+
+
+
+============================================================================================================================================================================================
+# For Loops vs Iterators - Complete Comparison
+
+## Table of Contents
+1. [Overview](#overview)
+2. [Types of Iteration](#types-of-iteration)
+3. [Performance Analysis](#performance-analysis)
+4. [Memory Usage](#memory-usage)
+5. [Safety Considerations](#safety-considerations)
+6. [Readability and Maintainability](#readability-and-maintainability)
+7. [Functional Programming](#functional-programming)
+8. [Specific Collection Types](#specific-collection-types)
+9. [Benchmarks](#benchmarks)
+10. [Best Practices](#best-practices)
+11. [Decision Matrix](#decision-matrix)
+
+## Overview
+
+When iterating over collections in Java, developers have several options:
+- **Traditional for loop** (index-based)
+- **Enhanced for loop** (for-each)
+- **Iterator** (explicit iterator)
+- **Stream API** (functional approach)
+
+Each approach has different performance characteristics, safety guarantees, and use cases.
+
+## Types of Iteration
+
+### 1. Traditional For Loop (Index-based)
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D", "E");
+
+// Traditional for loop
+for (int i = 0; i < list.size(); i++) {
+    String element = list.get(i);
+    System.out.println(element);
+}
+```
+
+### 2. Enhanced For Loop (For-each)
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D", "E");
+
+// Enhanced for loop (syntactic sugar for iterator)
+for (String element : list) {
+    System.out.println(element);
+}
+```
+
+### 3. Iterator (Explicit)
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D", "E");
+
+// Explicit iterator
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    String element = iterator.next();
+    System.out.println(element);
+}
+```
+
+### 4. Stream API
+```java
+List<String> list = Arrays.asList("A", "B", "C", "D", "E");
+
+// Stream API
+list.stream().forEach(System.out::println);
+```
+
+## Performance Analysis
+
+### ArrayList Performance Comparison
+
+```java
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class ArrayListPerformanceTest {
+    private static final int SIZE = 1_000_000;
+    private static final int ITERATIONS = 100;
+    
+    public static void main(String[] args) {
+        List<Integer> arrayList = new ArrayList<>();
+        for (int i = 0; i < SIZE; i++) {
+            arrayList.add(i);
+        }
+        
+        System.out.println("ArrayList Performance (1M elements, 100 iterations):");
+        
+        // Traditional for loop
+        long startTime = System.nanoTime();
+        for (int iter = 0; iter < ITERATIONS; iter++) {
+            long sum = 0;
+            for (int i = 0; i < arrayList.size(); i++) {
+                sum += arrayList.get(i);
+            }
+        }
+        long traditionalTime = System.nanoTime() - startTime;
+        
+        // Enhanced for loop
+        startTime = System.nanoTime();
+        for (int iter = 0; iter < ITERATIONS; iter++) {
+            long sum = 0;
+            for (Integer value : arrayList) {
+                sum += value;
+            }
+        }
+        long enhancedTime = System.nanoTime() - startTime;
+        
+        // Iterator
+        startTime = System.nanoTime();
+        for (int iter = 0; iter < ITERATIONS; iter++) {
+            long sum = 0;
+            Iterator<Integer> iterator = arrayList.iterator();
+            while (iterator.hasNext()) {
+                sum += iterator.next();
+            }
+        }
+        long iteratorTime = System.nanoTime() - startTime;
+        
+        // Stream
+        startTime = System.nanoTime();
+        for (int iter = 0; iter < ITERATIONS; iter++) {
+            long sum = arrayList.stream().mapToLong(Integer::longValue).sum();
+        }
+        long streamTime = System.nanoTime() - startTime;
+        
+        System.out.printf("Traditional for: %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(traditionalTime));
+        System.out.printf("Enhanced for:   %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(enhancedTime));
+        System.out.printf("Iterator:       %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(iteratorTime));
+        System.out.printf("Stream:         %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(streamTime));
+    }
+}
+
+/* Typical Results (may vary by JVM and hardware):
+ * Traditional for: 45 ms   (Fastest for ArrayList)
+ * Enhanced for:   48 ms    (Very close to traditional)
+ * Iterator:       52 ms    (Slightly slower)
+ * Stream:         180 ms   (Slowest due to overhead)
+ */
+```
+
+### LinkedList Performance Comparison
+
+```java
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class LinkedListPerformanceTest {
+    private static final int SIZE = 100_000; // Smaller size due to O(n) access
+    private static final int ITERATIONS = 10;
+    
+    public static void main(String[] args) {
+        List<Integer> linkedList = new LinkedList<>();
+        for (int i = 0; i < SIZE; i++) {
+            linkedList.add(i);
+        }
+        
+        System.out.println("LinkedList Performance (100K elements, 10 iterations):");
+        
+        // Traditional for loop - VERY SLOW for LinkedList
+        long startTime = System.nanoTime();
+        for (int iter = 0; iter < ITERATIONS; iter++) {
+            long sum = 0;
+            for (int i = 0; i < linkedList.size(); i++) {
+                sum += linkedList.get(i); // O(n) operation!
+            }
+        }
+        long traditionalTime = System.nanoTime() - startTime;
+        
+        // Enhanced for loop
+        startTime = System.nanoTime();
+        for (int iter = 0; iter < ITERATIONS; iter++) {
+            long sum = 0;
+            for (Integer value : linkedList) {
+                sum += value;
+            }
+        }
+        long enhancedTime = System.nanoTime() - startTime;
+        
+        // Iterator
+        startTime = System.nanoTime();
+        for (int iter = 0; iter < ITERATIONS; iter++) {
+            long sum = 0;
+            Iterator<Integer> iterator = linkedList.iterator();
+            while (iterator.hasNext()) {
+                sum += iterator.next();
+            }
+        }
+        long iteratorTime = System.nanoTime() - startTime;
+        
+        System.out.printf("Traditional for: %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(traditionalTime));
+        System.out.printf("Enhanced for:   %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(enhancedTime));
+        System.out.printf("Iterator:       %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(iteratorTime));
+    }
+}
+
+/* Typical Results:
+ * Traditional for: 15000+ ms  (Extremely slow - O(n²) complexity!)
+ * Enhanced for:   25 ms       (Fast - uses iterator internally)
+ * Iterator:       22 ms       (Fastest for LinkedList)
+ */
+```
+
+## Memory Usage
+
+### Memory Overhead Comparison
+
+```java
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.util.*;
+
+public class MemoryComparisonTest {
+    private static final int SIZE = 1_000_000;
+    
+    public static void main(String[] args) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < SIZE; i++) {
+            list.add(i);
+        }
+        
+        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+        
+        // Test memory usage for different iteration methods
+        testMemoryUsage("Traditional For Loop", () -> {
+            long sum = 0;
+            for (int i = 0; i < list.size(); i++) {
+                sum += list.get(i);
+            }
+            return sum;
+        });
+        
+        testMemoryUsage("Enhanced For Loop", () -> {
+            long sum = 0;
+            for (Integer value : list) {
+                sum += value;
+            }
+            return sum;
+        });
+        
+        testMemoryUsage("Iterator", () -> {
+            long sum = 0;
+            Iterator<Integer> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                sum += iterator.next();
+            }
+            return sum;
+        });
+        
+        testMemoryUsage("Stream", () -> {
+            return list.stream().mapToLong(Integer::longValue).sum();
+        });
+    }
+    
+    private static void testMemoryUsage(String method, java.util.function.Supplier<Long> test) {
+        System.gc(); // Suggest garbage collection
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        
+        long memoryBefore = getUsedMemory();
+        Long result = test.get();
+        long memoryAfter = getUsedMemory();
+        
+        System.out.printf("%s: %d bytes additional memory%n", 
+            method, memoryAfter - memoryBefore);
+    }
+    
+    private static long getUsedMemory() {
+        return ManagementFactory.getMemoryMXBean()
+            .getHeapMemoryUsage().getUsed();
+    }
+}
+
+/* Typical Results:
+ * Traditional For Loop: ~0 bytes      (No additional objects)
+ * Enhanced For Loop:   ~24 bytes      (Iterator object)
+ * Iterator:           ~24 bytes       (Iterator object)
+ * Stream:             ~500+ bytes     (Stream pipeline objects)
+ */
+```
+
+## Safety Considerations
+
+### Concurrent Modification Safety
+
+```java
+import java.util.*;
+import java.util.concurrent.ConcurrentModificationException;
+
+public class SafetyComparisonTest {
+    public static void main(String[] args) {
+        testConcurrentModification();
+        testSafeRemoval();
+    }
+    
+    private static void testConcurrentModification() {
+        System.out.println("=== Concurrent Modification Test ===");
+        
+        // Traditional for loop - can be unsafe with removal
+        List<String> list1 = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+        try {
+            for (int i = 0; i < list1.size(); i++) {
+                if (list1.get(i).equals("B")) {
+                    list1.remove(i); // Can cause index issues
+                    i--; // Need to adjust index
+                }
+            }
+            System.out.println("Traditional for (with adjustment): " + list1);
+        } catch (Exception e) {
+            System.out.println("Traditional for failed: " + e.getMessage());
+        }
+        
+        // Enhanced for loop - throws exception on modification
+        List<String> list2 = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+        try {
+            for (String element : list2) {
+                if (element.equals("B")) {
+                    list2.remove(element); // ConcurrentModificationException
+                }
+            }
+        } catch (ConcurrentModificationException e) {
+            System.out.println("Enhanced for failed: ConcurrentModificationException");
+        }
+        
+        // Iterator - safe removal
+        List<String> list3 = new ArrayList<>(Arrays.asList("A", "B", "C", "D"));
+        Iterator<String> iterator = list3.iterator();
+        while (iterator.hasNext()) {
+            String element = iterator.next();
+            if (element.equals("B")) {
+                iterator.remove(); // Safe removal
+            }
+        }
+        System.out.println("Iterator (safe removal): " + list3);
+    }
+    
+    private static void testSafeRemoval() {
+        System.out.println("\n=== Safe Removal Comparison ===");
+        
+        // Wrong way - traditional for loop (forward)
+        List<Integer> list1 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        for (int i = 0; i < list1.size(); i++) {
+            if (list1.get(i) % 2 == 0) {
+                list1.remove(i); // Skips elements!
+            }
+        }
+        System.out.println("Forward traditional (wrong): " + list1); // [1, 3, 5] - missed 4!
+        
+        // Correct way - traditional for loop (backward)
+        List<Integer> list2 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        for (int i = list2.size() - 1; i >= 0; i--) {
+            if (list2.get(i) % 2 == 0) {
+                list2.remove(i); // Safe when going backward
+            }
+        }
+        System.out.println("Backward traditional (correct): " + list2); // [1, 3, 5]
+        
+        // Best way - iterator
+        List<Integer> list3 = new ArrayList<>(Arrays.asList(1, 2, 3, 4, 5));
+        Iterator<Integer> iter = list3.iterator();
+        while (iter.hasNext()) {
+            if (iter.next() % 2 == 0) {
+                iter.remove(); // Always safe
+            }
+        }
+        System.out.println("Iterator (best): " + list3); // [1, 3, 5]
+    }
+}
+```
+
+### Thread Safety
+
+```java
+import java.util.*;
+import java.util.concurrent.*;
+
+public class ThreadSafetyTest {
+    private static final int SIZE = 1000;
+    private static final int THREADS = 10;
+    
+    public static void main(String[] args) throws InterruptedException {
+        // Test with ArrayList (not thread-safe)
+        testThreadSafety("ArrayList", new ArrayList<>());
+        
+        // Test with Vector (thread-safe)
+        testThreadSafety("Vector", new Vector<>());
+        
+        // Test with CopyOnWriteArrayList (thread-safe for iteration)
+        testThreadSafety("CopyOnWriteArrayList", new CopyOnWriteArrayList<>());
+    }
+    
+    private static void testThreadSafety(String collectionType, List<Integer> list) 
+            throws InterruptedException {
+        System.out.println("\n=== " + collectionType + " Thread Safety Test ===");
+        
+        // Populate list
+        for (int i = 0; i < SIZE; i++) {
+            list.add(i);
+        }
+        
+        ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+        CountDownLatch latch = new CountDownLatch(THREADS);
+        List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
+        
+        // Multiple threads iterating simultaneously
+        for (int i = 0; i < THREADS; i++) {
+            final int threadId = i;
+            executor.submit(() -> {
+                try {
+                    // Some threads iterate, others modify
+                    if (threadId % 2 == 0) {
+                        // Iterator threads
+                        Iterator<Integer> iter = list.iterator();
+                        int count = 0;
+                        while (iter.hasNext()) {
+                            iter.next();
+                            count++;
+                            if (count % 100 == 0) {
+                                Thread.sleep(1); // Simulate work
+                            }
+                        }
+                    } else {
+                        // Modifier threads
+                        for (int j = 0; j < 10; j++) {
+                            list.add(SIZE + threadId * 10 + j);
+                            Thread.sleep(5);
+                        }
+                    }
+                } catch (Exception e) {
+                    exceptions.add(e);
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+        
+        latch.await();
+        executor.shutdown();
+        
+        System.out.println("Exceptions caught: " + exceptions.size());
+        if (!exceptions.isEmpty()) {
+            System.out.println("First exception: " + exceptions.get(0).getClass().getSimpleName());
+        }
+        System.out.println("Final list size: " + list.size());
+    }
+}
+```
+
+## Readability and Maintainability
+
+### Code Clarity Comparison
+
+```java
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class ReadabilityComparison {
+    public static void main(String[] args) {
+        List<Person> people = Arrays.asList(
+            new Person("Alice", 25, "Engineer"),
+            new Person("Bob", 30, "Manager"),
+            new Person("Charlie", 35, "Engineer"),
+            new Person("Diana", 28, "Designer")
+        );
+        
+        System.out.println("=== Find Engineers Over 26 ===");
+        
+        // Traditional for loop - verbose
+        System.out.println("Traditional For Loop:");
+        List<String> result1 = new ArrayList<>();
+        for (int i = 0; i < people.size(); i++) {
+            Person person = people.get(i);
+            if (person.getAge() > 26 && "Engineer".equals(person.getRole())) {
+                result1.add(person.getName());
+            }
+        }
+        System.out.println(result1);
+        
+        // Enhanced for loop - cleaner
+        System.out.println("\nEnhanced For Loop:");
+        List<String> result2 = new ArrayList<>();
+        for (Person person : people) {
+            if (person.getAge() > 26 && "Engineer".equals(person.getRole())) {
+                result2.add(person.getName());
+            }
+        }
+        System.out.println(result2);
+        
+        // Iterator - similar to enhanced for
+        System.out.println("\nIterator:");
+        List<String> result3 = new ArrayList<>();
+        Iterator<Person> iterator = people.iterator();
+        while (iterator.hasNext()) {
+            Person person = iterator.next();
+            if (person.getAge() > 26 && "Engineer".equals(person.getRole())) {
+                result3.add(person.getName());
+            }
+        }
+        System.out.println(result3);
+        
+        // Stream API - most expressive
+        System.out.println("\nStream API:");
+        List<String> result4 = people.stream()
+            .filter(person -> person.getAge() > 26)
+            .filter(person -> "Engineer".equals(person.getRole()))
+            .map(Person::getName)
+            .collect(Collectors.toList());
+        System.out.println(result4);
+        
+        demonstrateComplexOperations(people);
+    }
+    
+    private static void demonstrateComplexOperations(List<Person> people) {
+        System.out.println("\n=== Complex Operations Comparison ===");
+        
+        // Group by role and calculate average age
+        System.out.println("Traditional approach (verbose):");
+        Map<String, List<Person>> groupedTraditional = new HashMap<>();
+        for (Person person : people) {
+            groupedTraditional.computeIfAbsent(person.getRole(), k -> new ArrayList<>())
+                .add(person);
+        }
+        
+        Map<String, Double> avgAgeTraditional = new HashMap<>();
+        for (Map.Entry<String, List<Person>> entry : groupedTraditional.entrySet()) {
+            double sum = 0;
+            for (Person person : entry.getValue()) {
+                sum += person.getAge();
+            }
+            avgAgeTraditional.put(entry.getKey(), sum / entry.getValue().size());
+        }
+        System.out.println(avgAgeTraditional);
+        
+        System.out.println("\nStream approach (concise):");
+        Map<String, Double> avgAgeStream = people.stream()
+            .collect(Collectors.groupingBy(
+                Person::getRole,
+                Collectors.averagingInt(Person::getAge)
+            ));
+        System.out.println(avgAgeStream);
+    }
+    
+    static class Person {
+        private final String name;
+        private final int age;
+        private final String role;
+        
+        public Person(String name, int age, String role) {
+            this.name = name;
+            this.age = age;
+            this.role = role;
+        }
+        
+        public String getName() { return name; }
+        public int getAge() { return age; }
+        public String getRole() { return role; }
+        
+        @Override
+        public String toString() {
+            return String.format("%s(%d, %s)", name, age, role);
+        }
+    }
+}
+```
+
+## Functional Programming
+
+### Stream API vs Traditional Loops
+
+```java
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class FunctionalVsImperative {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        
+        System.out.println("=== Functional vs Imperative Comparison ===");
+        
+        // Example 1: Transform and filter
+        System.out.println("Square even numbers:");
+        
+        // Imperative approach
+        List<Integer> imperativeResult = new ArrayList<>();
+        for (Integer number : numbers) {
+            if (number % 2 == 0) {
+                imperativeResult.add(number * number);
+            }
+        }
+        System.out.println("Imperative: " + imperativeResult);
+        
+        // Functional approach
+        List<Integer> functionalResult = numbers.stream()
+            .filter(n -> n % 2 == 0)
+            .map(n -> n * n)
+            .collect(Collectors.toList());
+        System.out.println("Functional: " + functionalResult);
+        
+        // Example 2: Parallel processing
+        System.out.println("\nParallel processing (sum of squares):");
+        
+        List<Integer> largeList = new ArrayList<>();
+        for (int i = 1; i <= 1_000_000; i++) {
+            largeList.add(i);
+        }
+        
+        // Sequential traditional
+        long start = System.nanoTime();
+        long sum1 = 0;
+        for (Integer number : largeList) {
+            sum1 += number * number;
+        }
+        long time1 = System.nanoTime() - start;
+        
+        // Sequential stream
+        start = System.nanoTime();
+        long sum2 = largeList.stream()
+            .mapToLong(n -> (long) n * n)
+            .sum();
+        long time2 = System.nanoTime() - start;
+        
+        // Parallel stream
+        start = System.nanoTime();
+        long sum3 = largeList.parallelStream()
+            .mapToLong(n -> (long) n * n)
+            .sum();
+        long time3 = System.nanoTime() - start;
+        
+        System.out.printf("Traditional: %d ms, Sum: %d%n", time1 / 1_000_000, sum1);
+        System.out.printf("Sequential Stream: %d ms, Sum: %d%n", time2 / 1_000_000, sum2);
+        System.out.printf("Parallel Stream: %d ms, Sum: %d%n", time3 / 1_000_000, sum3);
+    }
+}
+```
+
+## Specific Collection Types
+
+### Performance by Collection Type
+
+```java
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class CollectionSpecificPerformance {
+    private static final int SIZE = 100_000;
+    
+    public static void main(String[] args) {
+        testArrayList();
+        testLinkedList();
+        testHashSet();
+        testTreeSet();
+    }
+    
+    private static void testArrayList() {
+        System.out.println("=== ArrayList Performance ===");
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < SIZE; i++) {
+            list.add(i);
+        }
+        
+        // Index-based access - FASTEST for ArrayList
+        long start = System.nanoTime();
+        long sum = 0;
+        for (int i = 0; i < list.size(); i++) {
+            sum += list.get(i);
+        }
+        long indexTime = System.nanoTime() - start;
+        
+        // Iterator - slightly slower
+        start = System.nanoTime();
+        sum = 0;
+        for (Integer value : list) {
+            sum += value;
+        }
+        long iteratorTime = System.nanoTime() - start;
+        
+        System.out.printf("Index-based: %d ms%n", TimeUnit.NANOSECONDS.toMillis(indexTime));
+        System.out.printf("Iterator: %d ms%n", TimeUnit.NANOSECONDS.toMillis(iteratorTime));
+        System.out.printf("Ratio: %.2fx%n", (double) iteratorTime / indexTime);
+    }
+    
+    private static void testLinkedList() {
+        System.out.println("\n=== LinkedList Performance ===");
+        List<Integer> list = new LinkedList<>();
+        for (int i = 0; i < SIZE; i++) {
+            list.add(i);
+        }
+        
+        // Index-based access - EXTREMELY SLOW for LinkedList
+        long start = System.nanoTime();
+        long sum = 0;
+        for (int i = 0; i < Math.min(1000, list.size()); i++) { // Only first 1000 elements
+            sum += list.get(i);
+        }
+        long indexTime = System.nanoTime() - start;
+        
+        // Iterator - FAST for LinkedList
+        start = System.nanoTime();
+        sum = 0;
+        for (Integer value : list) {
+            sum += value;
+        }
+        long iteratorTime = System.nanoTime() - start;
+        
+        System.out.printf("Index-based (1000 elements): %d ms%n", 
+            TimeUnit.NANOSECONDS.toMillis(indexTime));
+        System.out.printf("Iterator (%d elements): %d ms%n", 
+            SIZE, TimeUnit.NANOSECONDS.toMillis(iteratorTime));
+        System.out.println("Index-based would be ~" + 
+            (indexTime * SIZE / 1000 / 1_000_000) + " ms for full list!");
+    }
+    
+    private static void testHashSet() {
+        System.out.println("\n=== HashSet Performance ===");
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < SIZE; i++) {
+            set.add(i);
+        }
+        
+        // Only iterator available for Set
+        long start = System.nanoTime();
+        long sum = 0;
+        for (Integer value : set) {
+            sum += value;
+        }
+        long iteratorTime = System.nanoTime() - start;
+        
+        // Explicit iterator
+        start = System.nanoTime();
+        sum = 0;
+        Iterator<Integer> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            sum += iterator.next();
+        }
+        long explicitTime = System.nanoTime() - start;
+        
+        System.out.printf("Enhanced for: %d ms%n", TimeUnit.NANOSECONDS.toMillis(iteratorTime));
+        System.out.printf("Explicit iterator: %d ms%n", TimeUnit.NANOSECONDS.toMillis(explicitTime));
+    }
+    
+    private static void testTreeSet() {
+        System.out.println("\n=== TreeSet Performance ===");
+        Set<Integer> set = new TreeSet<>();
+        for (int i = 0; i < SIZE; i++) {
+            set.add(i);
+        }
+        
+        // Iterator maintains sorted order
+        long start = System.nanoTime();
+        long sum = 0;
+        for (Integer value : set) {
+            sum += value;
+        }
+        long iteratorTime = System.nanoTime() - start;
+        
+        System.out.printf("Iterator (sorted): %d ms%n", TimeUnit.NANOSECONDS.toMillis(iteratorTime));
+    }
+}
+```
+
+## Benchmarks
+
+### Comprehensive Benchmark Suite
+
+```java
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class ComprehensiveBenchmark {
+    private static final int[] SIZES = {1_000, 10_000, 100_000, 1_000_000};
+    private static final int WARMUP_ITERATIONS = 10;
+    private static final int BENCHMARK_ITERATIONS = 100;
+    
+    public static void main(String[] args) {
+        System.out.println("=== Comprehensive Iteration Benchmark ===");
+        System.out.println("Warming up JVM...");
+        
+        // Warmup
+        for (int i = 0; i < WARMUP_ITERATIONS; i++) {
+            runBenchmark(1000);
+        }
+        
+        System.out.println("\nRunning benchmarks...");
+        System.out.printf("%-12s %-15s %-15s %-15s %-15s%n", 
+            "Size", "Traditional", "Enhanced", "Iterator", "Stream");
+        System.out.println("-".repeat(80));
+        
+        for (int size : SIZES) {
+            runBenchmark(size);
+        }
+    }
+    
+    private static void runBenchmark(int size) {
+        List<Integer> arrayList = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            arrayList.add(i);
+        }
+        
+        long traditionalTime = benchmarkTraditionalFor(arrayList);
+        long enhancedTime = benchmarkEnhancedFor(arrayList);
+        long iteratorTime = benchmarkIterator(arrayList);
+        long streamTime = benchmarkStream(arrayList);
+        
+        if (size >= 1000) { // Only print results for actual benchmark runs
+            System.out.printf("%-12s %-15d %-15d %-15d %-15d%n",
+                formatSize(size),
+                traditionalTime,
+                enhancedTime,
+                iteratorTime,
+                streamTime);
+        }
+    }
+    
+    private static long benchmarkTraditionalFor(List<Integer> list) {
+        long totalTime = 0;
+        for (int iter = 0; iter < BENCHMARK_ITERATIONS; iter++) {
+            long start = System.nanoTime();
+            long sum = 0;
+            for (int i = 0; i < list.size(); i++) {
+                sum += list.get(i);
+            }
+            totalTime += System.nanoTime() - start;
+        }
+        return TimeUnit.NANOSECONDS.toMillis(totalTime);
+    }
+    
+    private static long benchmarkEnhancedFor(List<Integer> list) {
+        long totalTime = 0;
+        for (int iter = 0; iter < BENCHMARK_ITERATIONS; iter++) {
+            long start = System.nanoTime();
+            long sum = 0;
+            for (Integer value : list) {
+                sum += value;
+            }
+            totalTime += System.nanoTime() - start;
+        }
+        return TimeUnit.NANOSECONDS.toMill
