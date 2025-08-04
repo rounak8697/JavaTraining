@@ -1,98 +1,153 @@
+# 🗺️ Java Map Interface - Complete Guide
 
-# Is `Map` part of the Java Collection Framework?
+**Date:** 2025-08-04
 
-## ✅ Short Answer:
-- `Map` is **part of the Java Collections Framework**
-- But it does **not extend** the `Collection` interface
-
----
-
-## 📦 Java Collections Framework Overview
-
-Java Collections Framework is a **unified architecture** for representing and manipulating collections (groups of objects). It includes:
-
-- **Interfaces** like `Collection`, `List`, `Set`, `Queue`, and `Map`
-- **Implementations** like `ArrayList`, `HashSet`, `LinkedList`, `HashMap`
-- **Algorithms** and utility classes (`Collections`, `Arrays`)
+## What is a Map in Java?
+A **Map** is an object that maps **keys to values**. It cannot contain duplicate keys, and each key maps to at most one value.
 
 ---
 
-## 🧩 Interface Hierarchy
+## 🔢 Types of Maps in Java
 
-### Collection Interface:
-```text
-              Collection
-                / | \
-      List     Set  Queue
-```
+### 1. HashMap
+- **Order**: Unordered
+- **Null**: Allows one `null` key and multiple `null` values
+- **Thread Safe**: ❌
+- **Performance**: Fast (`O(1)` for get/put)
 
-- `List`, `Set`, `Queue` are subinterfaces of `Collection`
-- Examples:
-  - `ArrayList` implements `List`
-  - `HashSet` implements `Set`
-  - `PriorityQueue` implements `Queue`
-
----
-
-### Map Interface:
-```text
-              Map  ← NOT a subinterface of Collection
-```
-
-- `Map` is **not** derived from `Collection`
-- It is a **separate root interface**
-- It is still part of the Java Collections Framework
-
----
-
-## ❓ Why `Map` Is Separate?
-
-| Feature | Collection | Map |
-|--------|------------|-----|
-| Represents | Group of elements | Key-value pairs |
-| Typical methods | `add(E)`, `remove(E)`, `iterator()` | `put(K,V)`, `get(K)`, `keySet()` |
-| Example | List of students | Student roll number → Student name |
-
-Because a `Map` stores entries (`key → value` pairs), it does **not behave like a Collection of individual elements**, hence it is separate.
-
----
-
-## ✅ Included in Java Collections Framework?
-
-| Interface | Part of Collection Framework? | Subinterface of `Collection`? |
-|----------|-------------------------------|-------------------------------|
-| `List`   | ✅ Yes                        | ✅ Yes                        |
-| `Set`    | ✅ Yes                        | ✅ Yes                        |
-| `Queue`  | ✅ Yes                        | ✅ Yes                        |
-| `Map`    | ✅ Yes                        | ❌ No                         |
-
----
-
-## 🧪 Example Code:
+**Use Case**: Storing configs, caching data
 
 ```java
-import java.util.*;
-
-public class MapDemo {
-    public static void main(String[] args) {
-        Map<Integer, String> map = new HashMap<>();
-        map.put(101, "Java");
-        map.put(102, "Python");
-        map.put(103, "C++");
-
-        System.out.println("Course Code to Name:");
-        for (Map.Entry<Integer, String> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + " → " + entry.getValue());
-        }
-    }
-}
+Map<String, Integer> map = new HashMap<>();
+map.put("apple", 2);
 ```
 
 ---
 
-## 🔚 Conclusion:
-- `Map` is **included in the Java Collections Framework**
-- But it does **not extend** the `Collection` interface
-- It serves a different purpose: storing **key-value pairs**
+### 2. LinkedHashMap
+- **Order**: Maintains insertion order
+- **Null**: Allows null keys and values
+- **Special Feature**: Can be used to create LRU cache
 
-So yes — **`Map` is in the Collection Framework, but not a subtype of Collection.**
+**Use Case**: LRU cache, ordered configs
+
+```java
+Map<String, Integer> lruCache = new LinkedHashMap<>(16, 0.75f, true);
+```
+
+---
+
+### 3. TreeMap
+- **Order**: Sorted by natural order or custom comparator
+- **Null**: Does not allow `null` keys
+- **Performance**: `O(log n)` operations
+
+**Use Case**: Sorted dictionary, range searches
+
+```java
+Map<Integer, String> sortedMap = new TreeMap<>();
+```
+
+---
+
+### 4. ConcurrentHashMap
+- **Thread Safe**: ✅ (no need to synchronize)
+- **Null**: Does not allow `null` keys or values
+
+**Use Case**: Thread-safe cache
+
+```java
+Map<String, String> concurrentMap = new ConcurrentHashMap<>();
+```
+
+---
+
+### 5. Hashtable
+- **Thread Safe**: ✅ (legacy, synchronized)
+- **Null**: ❌ Does not allow `null` key or value
+
+**Use Case**: Legacy codebases
+
+```java
+Map<String, String> legacyMap = new Hashtable<>();
+```
+
+---
+
+### 6. WeakHashMap
+- **Key Storage**: Weak references
+- **GC Behavior**: Entries removed when key is no longer referenced
+
+**Use Case**: Memory-sensitive caches
+
+```java
+Map<Object, String> weakMap = new WeakHashMap<>();
+```
+
+---
+
+### 7. IdentityHashMap
+- **Comparison**: Uses `==` instead of `.equals()`
+- **Null**: Allows null keys and values
+
+**Use Case**: Serialization frameworks, object identity
+
+```java
+Map<Object, String> idMap = new IdentityHashMap<>();
+```
+
+---
+
+### 8. EnumMap
+- **Key Type**: Only enum keys
+- **Performance**: Very fast, internally array-based
+
+**Use Case**: Efficient mapping for enums
+
+```java
+enum Day { MON, TUE, WED }
+Map<Day, String> schedule = new EnumMap<>(Day.class);
+```
+
+---
+
+### 9. NavigableMap
+- **Extends**: `SortedMap`
+- **Extra Methods**: `lowerKey()`, `floorKey()`, `ceilingKey()`, `higherKey()`
+
+**Use Case**: Range-based queries
+
+```java
+NavigableMap<Integer, String> navMap = new TreeMap<>();
+```
+
+---
+
+### 10. SortedMap
+- **Order**: Maintains natural key order
+- **Implemented By**: TreeMap
+
+**Use Case**: Sorted views of data
+
+```java
+SortedMap<String, String> sortedMap = new TreeMap<>();
+```
+
+---
+
+## 🔚 Summary Table
+
+| Map Type            | Order Maintained     | Sorted | Thread Safe | Null Keys | Comparison     |
+|---------------------|----------------------|--------|--------------|-----------|----------------|
+| HashMap             | ❌                   | ❌     | ❌           | ✅        | `.equals()`    |
+| LinkedHashMap       | ✅ (Insertion)        | ❌     | ❌           | ✅        | `.equals()`    |
+| TreeMap             | ✅ (Sorted)           | ✅     | ❌           | ❌        | `.compareTo()` |
+| ConcurrentHashMap   | ❌                   | ❌     | ✅           | ❌        | `.equals()`    |
+| Hashtable           | ❌                   | ❌     | ✅           | ❌        | `.equals()`    |
+| WeakHashMap         | ❌                   | ❌     | ❌           | ✅        | `.equals()`    |
+| IdentityHashMap     | ❌                   | ❌     | ❌           | ✅        | `==`           |
+| EnumMap             | ✅ (Enum Order)       | ✅     | ❌           | ❌        | Enum ordinal   |
+
+---
+
+📝 If you are dealing with multithreaded applications, prefer `ConcurrentHashMap`. For ordering, use `LinkedHashMap` or `TreeMap`. If your keys are enums, `EnumMap` is highly efficient.
