@@ -1066,27 +1066,189 @@ public void FileProcessor_Disposed_DoesNotThrow()
 **Weeks 16-19:** Implement advanced C# features in production-quality code
 **Weeks 20-22:** Deploy complete applications with comprehensive test coverage
 
-## Recommended Resources
+## Comprehensive Learning Resources
 
-### Books
-- "C# in Depth" by Jon Skeet
-- "Clean Code" by Robert C. Martin
-- "The Art of Unit Testing" by Roy Osherove
-- "Effective C#" by Bill Wagner
+### 📚 Essential Books
+**Beginner to Intermediate:**
+- "C# in Depth" by Jon Skeet - Deep dive into C# language features
+- "Head First C#" by Andrew Stellman & Jennifer Greene - Visual learning approach
+- "C# 12 and .NET 8 - Modern Cross-Platform Development" by Mark J. Price
 
-### Online Resources
-- Microsoft Learn C# Path
-- Unit Testing in C# Tutorial (Microsoft Docs)
-- Moq Documentation and Examples
-- Clean Architecture with .NET Core (GitHub repos)
+**Testing & Clean Code:**
+- "The Art of Unit Testing" by Roy Osherove - Unit testing bible
+- "Clean Code" by Robert C. Martin - Writing maintainable code
+- "Working Effectively with Legacy Code" by Michael Feathers
+- "xUnit Test Patterns" by Gerard Meszaros
 
-### Tools & Frameworks
-- Visual Studio Community / VS Code
-- .NET CLI
-- xUnit / NUnit / MSTest
-- Moq Framework
-- FluentAssertions
-- Coverlet (code coverage)
+**Advanced Topics:**
+- "Effective C#" by Bill Wagner - Best practices and idioms
+- "CLR via C#" by Jeffrey Richter - Understanding the runtime
+- "Clean Architecture" by Robert C. Martin
+
+### 🌐 Free Online Courses & Tutorials
+
+**Microsoft Official Resources:**
+- [Microsoft Learn C# Path](https://learn.microsoft.com/en-us/dotnet/csharp/) - Comprehensive official guide covering everything from basics to advanced topics
+- [C# for Beginners Video Series](https://learn.microsoft.com/en-us/shows/csharp-for-beginners/) - Scott Hanselman and David Fowler teach C# from ground up
+- [Interactive C# Tutorials](https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/tutorials/) - Hands-on browser-based learning experience
+- [Unit Testing with xUnit Tutorial](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-csharp-with-xunit) - Official step-by-step unit testing guide
+
+**Free Comprehensive Courses:**
+- [freeCodeCamp Foundational C# Certification](https://www.freecodecamp.org/learn/foundational-c-sharp-with-microsoft/) - Complete beginner course recommended by experts
+- [Codecademy Learn C#](https://www.codecademy.com/learn/learn-c-sharp) - Interactive learning platform
+- [W3Schools C# Tutorial](https://www.w3schools.com/cs/) - Quick reference and examples
+
+### 💻 Paid Premium Courses
+
+**Comprehensive C# Courses:**
+- **Pluralsight**: "C# Fundamentals" and "C# Advanced Topics" series
+- **Udemy**: "Complete C# Unity Game Developer" (if interested in game development)
+- **LinkedIn Learning**: "C# Essential Training" series
+- **Coursera**: Microsoft .NET specializations
+
+**Testing-Focused Courses:**
+- **Pluralsight**: "Automated Testing with MSTest V2", "Introduction to .NET Testing with NUnit 3"
+- **Udemy**: "Unit Testing for C# Developers" by Mosh Hamedani
+- **Test Automation University**: Free testing courses including C# content
+
+### 🧪 Unit Testing Specific Resources
+
+**Framework Documentation:**
+- [xUnit.net Documentation](https://xunit.net/) - Primary testing framework used in roadmap
+- [NUnit Documentation](https://nunit.org/) - Alternative testing framework
+- [MSTest Documentation](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-with-mstest)
+
+**Mocking & Advanced Testing:**
+- [Moq Framework GitHub](https://github.com/moq/moq4) - Most popular mocking framework
+- [FluentAssertions Documentation](https://fluentassertions.com/) - Better assertions
+- "The Ultimate Guide to Unit Testing in .NET Using xUnit and Moq" - Modern comprehensive tutorial
+- Mock testing tutorial with practical .NET Core examples
+
+**Testing Best Practices:**
+- [Microsoft Testing Best Practices](https://docs.microsoft.com/en-us/dotnet/core/testing/best-practices)
+- [Unit Testing Anti-patterns](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices#common-anti-patterns)
+- Martin Fowler's Testing Articles (martinfowler.com/testing/)
+
+### 🎬 YouTube Channels & Video Content
+
+**C# Programming:**
+- **IAmTimCorey** - Comprehensive C# tutorials and best practices
+- **Programming with Mosh** - Clean, beginner-friendly explanations
+- **Kudvenkat** - Detailed C# and .NET tutorials
+- **dotNET** - Official Microsoft .NET channel
+
+**Testing & Quality:**
+- **Clean Code Studio** - Testing patterns and practices
+- **CodeOpinion** - Software architecture and testing
+- **Milan Jovanović** - .NET best practices and testing
+
+### 🛠️ Development Tools & Extensions
+
+**IDEs & Editors:**
+- **Visual Studio Community** (Windows) - Full-featured IDE, free
+- **Visual Studio Code** (Cross-platform) - Lightweight, excellent C# support
+- **JetBrains Rider** (Paid) - Premium cross-platform IDE
+
+**Essential Extensions:**
+- **C# Dev Kit** (VS Code) - Official Microsoft C# extension
+- **GitLens** - Enhanced Git integration
+- **Live Unit Testing** (Visual Studio) - Real-time test feedback
+- **NCrunch** (Paid) - Continuous testing tool
+
+**Testing Frameworks & Libraries:**
+- **xUnit** - Modern, extensible testing framework
+- **NUnit** - Mature, feature-rich testing framework  
+- **MSTest** - Microsoft's built-in testing framework
+- **Moq** - Most popular mocking framework
+- **FluentAssertions** - More readable assertions
+- **AutoFixture** - Test data generation
+- **Bogus** - Fake data generator for testing
+
+### 📊 Code Quality & Coverage Tools
+
+**Code Coverage:**
+- **Coverlet** - Cross-platform code coverage framework
+- **dotCover** (JetBrains, Paid) - Advanced coverage analysis
+- **Fine Code Coverage** (VS Extension) - Visual coverage reports
+
+**Code Analysis:**
+- **SonarLint** - Real-time code quality feedback
+- **Roslyn Analyzers** - Built-in code analysis
+- **StyleCop** - Code style enforcement
+
+### 🌍 Community & Practice Platforms
+
+**Coding Practice:**
+- **Codewars** - Algorithm challenges in C#
+- **LeetCode** - Interview preparation problems
+- **HackerRank** - Programming challenges with C# support
+- **Exercism** - Mentored code practice
+
+**Communities:**
+- **r/csharp** (Reddit) - Active community discussions
+- **Stack Overflow** - Q&A for specific problems
+- **C# Corner** - Articles and tutorials
+- **DevTo** - Developer articles and experiences
+- **.NET Foundation** - Open source .NET projects
+
+### 📱 Mobile Apps for Learning
+
+**On-the-go Learning:**
+- **SoloLearn C#** - Mobile-friendly lessons
+- **Programming Hero** - Gamified learning
+- **Encode** - Quick programming lessons
+
+### 🏗️ Project Ideas & Repositories
+
+**Beginner Projects:**
+- Console Calculator with comprehensive tests
+- Todo List application (Console → Web API progression)
+- Library Management System
+- Bank Account simulation with full test coverage
+
+**Intermediate Projects:**
+- RESTful Web API with Entity Framework
+- Chat application with SignalR
+- E-commerce product catalog
+- Weather data aggregation service
+
+**Advanced Projects:**
+- Microservices with Docker containers
+- Event-driven architecture with message queues
+- Clean Architecture implementation
+- Performance-optimized data processing system
+
+**GitHub Repositories to Study:**
+- [Clean Architecture Template](https://github.com/jasontaylordev/CleanArchitecture) - Production-ready template
+- [eShopOnContainers](https://github.com/dotnet-architecture/eShopOnContainers) - Microsoft microservices sample
+- [Awesome .NET](https://github.com/quozd/awesome-dotnet) - Curated list of .NET libraries
+
+### 📋 Certification & Assessment
+
+**Microsoft Certifications:**
+- **AZ-204: Developing Solutions for Microsoft Azure** - Cloud development
+- **70-483: Programming in C#** (Being retired, but materials still valuable)
+
+**Online Assessments:**
+- **Pluralsight Skill IQ** - Assess your C# knowledge level
+- **Microsoft Learn Achievements** - Track your learning progress
+- **CodeSignal** - Technical interview practice
+
+### 💡 Pro Tips for Resource Usage
+
+**Phase-Based Resource Selection:**
+- **Weeks 1-4**: Focus on Microsoft Learn + one beginner book
+- **Weeks 5-8**: Add YouTube channels for visual explanations of OOP
+- **Weeks 9-10**: Intensive focus on testing resources and documentation
+- **Weeks 11-15**: Community engagement and advanced testing articles
+- **Weeks 16-22**: Architecture patterns and real-world project repositories
+
+**Daily Resource Rotation:**
+- **Monday**: Official documentation and tutorials
+- **Tuesday**: Video content and visual learning
+- **Wednesday**: Community articles and blog posts
+- **Thursday**: Practice platforms and coding challenges
+- **Friday**: Project work using GitHub repositories as reference
 
 ## Assessment Criteria
 
